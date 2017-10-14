@@ -1,0 +1,67 @@
+services:
+  searchapi:
+    image: jonbec32/searchengineapi
+    ports:
+      - "5000"
+  searchservice:
+    image: jonbec32/searchengineservice
+    ports:
+      - "5001"
+  rabbitmq:
+    image: rabbitmq:alpine
+  redis:
+    image: redis:alpine
+  mongo:
+    image: mongo
+    expose:
+        - "27017"
+    volumes:
+        - /opt/data/mongo_home:/data/db
+    restart: always
+    mem_limit: 1024m
+  mongolastic:
+    image: ozlerhakan/mongolastic
+
+  elasticsearch1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.3
+    container_name: elasticsearch1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.3
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch1"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+
+networks:
+  esnet:

@@ -1,0 +1,21 @@
+misc:
+    dindex:
+        name: nerds
+    ctype:
+        name: nerds
+    dropDataset: false
+mongo:
+    host: M2461755AGTDY.community.veritas.com
+    port: 27017
+    # auth:
+    #     user: <string>
+    #     pwd: "password"
+    #     source: <db-name>
+    #     mechanism: ( plain | scram-sha-1 | x509 | gssapi | cr )
+elastic:
+    host: M2461755AGTDY.community.veritas.com
+    port: 9300
+    longToString: true
+    # auth:
+    #     user: <string>
+    #     pwd: "password"
